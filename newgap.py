@@ -3,7 +3,6 @@ import pandas as pd
 from pathlib import Path
 import os
 import re
-import sys
 from tkinter import Tk, filedialog
 
 def extract_data_from_pdf(pdf_file):
@@ -11,9 +10,9 @@ def extract_data_from_pdf(pdf_file):
         with open(pdf_file, 'rb') as file:
             reader = PyPDF2.PdfReader(file)
             text = ''.join([page.extract_text().replace('\n', ' ') for page in reader.pages])
-            
-            reestr_match = re.search(r'- 00(\d+)/', text)
-            reestr = reestr_match.group(1).strip() if reestr_match else "Не найдено"
+
+            reestr_match = re.search(r'\b\d{6}/\d{3}\b', text)
+            reestr = reestr_match.group(0) if reestr_match else "Не найдено"
             if reestr == "Не найдено":
                 print(f"Реестровый номер не найден в файле {pdf_file}")
 
