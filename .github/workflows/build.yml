@@ -28,7 +28,7 @@ jobs:
     - name: Build executable
       run: |
         .\myenv\Scripts\activate
-        pyinstaller --noconfirm --onefile --windowed --icon=your_icon.ico newgap.py
+        pyinstaller --noconfirm newgap.py
 
     - name: Upload artifact
       uses: actions/upload-artifact@v2
