@@ -3,7 +3,7 @@ name: Build EXE
 on:
   push:
     branches:
-      - master
+      - master  # or main, depending on your branch name
 
 jobs:
   build:
@@ -16,7 +16,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
-        python-version: '3.x'  # Укажите версию Python
+        python-version: '3.x'  # Specify the version of Python
 
     - name: Install dependencies
       run: |
@@ -35,4 +35,3 @@ jobs:
       with:
         name: newgap-exe
         path: dist/newgap.exe
-

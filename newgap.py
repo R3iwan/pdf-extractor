@@ -74,13 +74,17 @@ def extract_data_from_pdf(pdf_file):
 def create_newgep():
     root = Tk()
     root.withdraw()  # Hide the root window
-    pdf_file_paths = filedialog.askopenfilenames(
-        title="Выберите PDF файлы",
-        filetypes=(("PDF files", "*.pdf"), ("All files", "*.*"))
-    )
+    folder_path = filedialog.askdirectory(title="Выберите папку с PDF файлами")
+
+    if not folder_path:
+        print("Папка не выбрана.")
+        return None
+
+    folder_path = Path(folder_path)
+    pdf_file_paths = list(folder_path.glob("*.pdf"))
 
     if not pdf_file_paths:
-        print("Файлы не выбраны.")
+        print("Нет PDF файлов в выбранной папке.")
         return None
 
     data_list = []
@@ -90,7 +94,7 @@ def create_newgep():
             if data:
                 data_list.append(data)
                 new_file_name = f"{data['Название файла']}.pdf"
-                new_file_path = Path(pdf_file_path).parent / new_file_name
+                new_file_path = pdf_file_path.parent / new_file_name
                 os.rename(pdf_file_path, new_file_path)
         except Exception as e:
             print(f"Ошибка при извлечении данных из файла {pdf_file_path}: {e}")
@@ -101,7 +105,7 @@ def create_newgep():
 
     try:
         df = pd.DataFrame(data_list)
-        output_file_path = Path(pdf_file_paths[0]).parent / 'newgep.xlsx'
+        output_file_path = folder_path / 'newgep.xlsx'
         df.to_excel(output_file_path, index=False)
         print(f"Данные извлечены и сохранены в {output_file_path}")
         return output_file_path
