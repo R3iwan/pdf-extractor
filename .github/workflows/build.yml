@@ -3,7 +3,7 @@ name: Build EXE
 on:
   push:
     branches:
-      - master  # or main, depending on your branch name
+      - master  
 
 jobs:
   build:
@@ -16,7 +16,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
-        python-version: '3.x'  # Specify the version of Python
+        python-version: '3.x'  
 
     - name: Install dependencies
       run: |
@@ -28,7 +28,7 @@ jobs:
     - name: Build executable
       run: |
         .\myenv\Scripts\activate
-        pyinstaller --onefile newgap.py
+        pyinstaller --noconfirm --onefile --windowed --icon=your_icon.ico newgap.py
 
     - name: Upload artifact
       uses: actions/upload-artifact@v2

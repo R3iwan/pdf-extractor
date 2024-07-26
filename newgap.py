@@ -11,8 +11,8 @@ def extract_data_from_pdf(pdf_file):
             reader = PyPDF2.PdfReader(file)
             text = ''.join([page.extract_text().replace('\n', ' ') for page in reader.pages])
 
-            reestr_match = re.search(r'\b\d{6}/\d{3}\b', text)
-            reestr = reestr_match.group(0) if reestr_match else "Не найдено"
+            reestr_match = re.search(r'\b0*(\d{5})/\d{3}\b', text)
+            reestr = reestr_match.group(1) if reestr_match else "Не найдено"
             if reestr == "Не найдено":
                 print(f"Реестровый номер не найден в файле {pdf_file}")
 
