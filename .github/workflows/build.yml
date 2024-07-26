@@ -16,7 +16,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
-        python-version: '3.x'  
+        python-version: '3.x'
 
     - name: Install dependencies
       run: |
@@ -28,7 +28,11 @@ jobs:
     - name: Build executable
       run: |
         .\myenv\Scripts\activate
-        pyinstaller --noconfirm newgap.py
+        pyinstaller --noconfirm --onefile newgap.py
+
+    - name: List files in dist directory
+      run: |
+        dir dist
 
     - name: Upload artifact
       uses: actions/upload-artifact@v2
