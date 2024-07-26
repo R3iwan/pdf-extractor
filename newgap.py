@@ -3,6 +3,7 @@ import pandas as pd
 from pathlib import Path
 import os
 import sys
+from tkinter import Tk, filedialog
 
 def extract_data_from_pdf(pdf_file):
     try:
@@ -71,28 +72,36 @@ def extract_data_from_pdf(pdf_file):
         return None
 
 def create_newgep():
-    current_directory = Path(__file__).parent
+    root = Tk()
+    root.withdraw()  # Hide the root window
+    pdf_file_paths = filedialog.askopenfilenames(
+        title="Выберите PDF файлы",
+        filetypes=(("PDF files", "*.pdf"), ("All files", "*.*"))
+    )
+
+    if not pdf_file_paths:
+        print("Файлы не выбраны.")
+        return None
+
     data_list = []
-    
-    for pdf_file in current_directory.iterdir():
-        if pdf_file.suffix.lower() == '.pdf':
-            try:
-                data = extract_data_from_pdf(pdf_file)
-                if data:
-                    data_list.append(data)
-                    new_file_name = f"{data['Название файла']}.pdf"
-                    new_file_path = current_directory / new_file_name
-                    pdf_file.rename(new_file_path)
-            except Exception as e:
-                print(f"Ошибка при извлечении данных из файла {pdf_file}: {e}")
-    
+    for pdf_file_path in pdf_file_paths:
+        try:
+            data = extract_data_from_pdf(pdf_file_path)
+            if data:
+                data_list.append(data)
+                new_file_name = f"{data['Название файла']}.pdf"
+                new_file_path = Path(pdf_file_path).parent / new_file_name
+                os.rename(pdf_file_path, new_file_path)
+        except Exception as e:
+            print(f"Ошибка при извлечении данных из файла {pdf_file_path}: {e}")
+
     if not data_list:
         print("Нет данных для записи в Excel.")
         return None
 
     try:
         df = pd.DataFrame(data_list)
-        output_file_path = current_directory / 'newgep.xlsx'
+        output_file_path = Path(pdf_file_paths[0]).parent / 'newgep.xlsx'
         df.to_excel(output_file_path, index=False)
         print(f"Данные извлечены и сохранены в {output_file_path}")
         return output_file_path
