@@ -2,6 +2,7 @@ import PyPDF2
 import pandas as pd
 from pathlib import Path
 import os
+import re
 import sys
 from tkinter import Tk, filedialog
 
@@ -11,9 +12,8 @@ def extract_data_from_pdf(pdf_file):
             reader = PyPDF2.PdfReader(file)
             text = ''.join([page.extract_text().replace('\n', ' ') for page in reader.pages])
             
-            reestr_nomer_start = text.find("- 00")
-            reestr_nomer_end = text.find("/")
-            reestr = text[reestr_nomer_start + 4:reestr_nomer_end].strip() if reestr_nomer_start != -1 and reestr_nomer_end != -1 else "Не найдено"
+            reestr_match = re.search(r'- 00(\d+)/', text)
+            reestr = reestr_match.group(1).strip() if reestr_match else "Не найдено"
             if reestr == "Не найдено":
                 print(f"Реестровый номер не найден в файле {pdf_file}")
 
